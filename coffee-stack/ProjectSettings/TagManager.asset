@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - cup
+  - engel
+  - destroyer
   layers:
   - Default
   - TransparentFX

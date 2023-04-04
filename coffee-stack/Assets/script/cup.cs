@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class cup : MonoBehaviour
 {
+    public bool triggertrigger;
     public GameObject movingcups;
     public float speedz;
+    public bool cutted;
     GameObject hand;
     [Header("eklemeler")]
+    
     public bool milk;
     public bool coffee;
     public bool sleeve;
@@ -16,19 +19,7 @@ public class cup : MonoBehaviour
     public bool first;
     public bool second;
     public bool third;
-    [Header("bardak�e�itleri")]
-    public GameObject firstcup;
-    public GameObject secondcup;
-    public GameObject thirdcup;
-    [Header("1.bardakmalzemeleri")]
-    public GameObject kapak1;
-    public GameObject ambalaj1;
-    [Header("2.bardakmalzemeleri")]
-    public GameObject kapak2;
-    public GameObject ambalaj2;
-    [Header("3.bardakmalzemeleri")]
-    public GameObject kapak3;
-    public GameObject ambalaj3;
+    
 
 
     void Start()
@@ -36,29 +27,82 @@ public class cup : MonoBehaviour
         hand = GameObject.FindGameObjectWithTag("Player");
         movingcups = GameObject.Find("movingcups");
     }
+    private void Update()
+    {
+       gameObject.GetComponent<Rigidbody>().useGravity=!canmove;
+        gameObject.GetComponent<CapsuleCollider>().isTrigger = canmove;
+        if (coffee && milk)
+            {
+                transform.Find("süt").gameObject.SetActive(false);
+                transform.Find("kahve").gameObject.SetActive(false);
+                transform.Find("sütlü_kahve").gameObject.SetActive(true);
+            }
+            else if (milk) {
+                transform.Find("süt").gameObject.SetActive(true);
+                transform.Find("kahve").gameObject.SetActive(false);
+                transform.Find("sütlü_kahve").gameObject.SetActive(false);
+            }
+            else if (coffee)
+            {
+                transform.Find("süt").gameObject.SetActive(false);
+                transform.Find("kahve").gameObject.SetActive(true);
+                transform.Find("sütlü_kahve").gameObject.SetActive(false);
+            }
+            else {transform.Find("süt").gameObject.SetActive(false);
+                transform.Find("kahve").gameObject.SetActive(false);
+                transform.Find("sütlü_kahve").gameObject.SetActive(false); }
 
+        transform.Find("first").gameObject.SetActive(first);
+        transform.Find("second").gameObject.SetActive(second);
+        transform.Find("third").gameObject.SetActive(third);
+        if (first) {
+            
+            
+            transform.Find("first").gameObject.transform.Find("Cup_Sleeve").gameObject.SetActive(sleeve);
+            transform.Find("first").gameObject.transform.Find("Cup_Head").gameObject.SetActive(lid);
+        }
+        if (second)
+        {
+            transform.Find("second").gameObject.transform.Find("Cup_Sleeve").gameObject.SetActive(sleeve);
+            transform.Find("second").gameObject.transform.Find("Cup_Head").gameObject.SetActive(lid);
+        }
+        if (third)
+        {
+            transform.Find("third").gameObject.transform.Find("Cup_Sleeve").gameObject.SetActive(sleeve);
+            transform.Find("third").gameObject.transform.Find("Cup_Head").gameObject.SetActive(lid);
+        }
+
+    }
     private void FixedUpdate()
     {
-        transform.Translate(0, 0, -10*speedz * Time.fixedDeltaTime);
+        transform.Translate(0, 0, -15*speedz * Time.fixedDeltaTime);
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "cup" && canmove == false)
+        if (other.gameObject.tag == "cup" && canmove == false&&triggertrigger)
         {
+            this.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
             this.gameObject.transform.parent = movingcups.transform;
             canmove = true;
             
             this.gameObject.transform.position = other.gameObject.transform.position+new Vector3(4,0,0);
             StartCoroutine(hand.GetComponent<cup_movement>().scalecups());
         }
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "cup"&&canmove==false) {
-            this.gameObject.transform.parent = movingcups.transform;
-           
-            canmove = true;
-        
+        if (other.gameObject.tag == "engel")
+        {
+            
+            cutted = true;
+hand.GetComponent<cup_movement>().cutthecups();
         }
+        if (other.gameObject.tag == "destroyer") { gameObject.SetActive(false); }
+    }
+    public IEnumerator controltriggertrigger()
+    {
+        triggertrigger = false;
+        yield return new WaitForSecondsRealtime(1);
+        triggertrigger = true;
+
+
     }
 }

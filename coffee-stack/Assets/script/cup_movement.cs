@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class cup_movement : MonoBehaviour
 {
+    
+    public bool cutted;
     public GameObject movingcups;
     public float speed;
     Touch touch;
@@ -68,5 +70,28 @@ public class cup_movement : MonoBehaviour
             movingcups.transform.GetChild(i).transform.DOScale(new Vector3(2f, 2f, 2f), 0.25f);
             yield return new WaitForSecondsRealtime(0.01f);
         }
+    }
+    public void cutthecups()
+    {
+        bool cutting=false;
+        for (int i = 0; i <movingcups.transform.childCount; i++)
+        {
+            if(movingcups.transform.GetChild(i).GetComponent<cup>().cutted){ cutting = true; }
+            if (cutting) {
+                StartCoroutine(movingcups.transform.GetChild(i).GetComponent<cup>().controltriggertrigger());
+       
+               movingcups.transform.GetChild(i).GetComponent<cup>().canmove = false;
+              movingcups.transform.GetChild(i).GetComponent<Rigidbody>().velocity=new Vector3(0, 10, (float)Random.Range(-5f, 5f));
+               
+            movingcups.transform.GetChild(i).gameObject.transform.parent = null;
+                movingcups.transform.GetChild(i).gameObject.transform.localScale = new Vector3(2, 2, 2);
+            }
+            
+        }
+
+
+
+
+
     }
 }
