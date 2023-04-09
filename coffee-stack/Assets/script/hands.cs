@@ -12,7 +12,7 @@ public class hands : MonoBehaviour
     void Start()
     {
         mainhand = GameObject.FindGameObjectWithTag("Player");
-       hand = GameObject.FindGameObjectsWithTag("hands");
+        hand = GameObject.FindGameObjectsWithTag("hands");
     }
     private void OnTriggerEnter(Collider other)
     {
