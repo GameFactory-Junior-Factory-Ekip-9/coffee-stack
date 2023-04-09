@@ -18,6 +18,6 @@ public class camerafollow : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        transform.position = new Vector3(hand.transform.position.x- 30, hand.transform.position.y+28, 0);
+        transform.position = new Vector3(hand.transform.position.x- 38, hand.transform.position.y+28, 0);
     }
 }

@@ -10,18 +10,10 @@ public class cup : MonoBehaviour
     public bool cutted;
     GameObject hand;
     [Header("eklemeler")]
-    
-    public bool milk;
     public bool coffee;
     public bool sleeve;
     public bool lid;
     public bool canmove;
-    public bool first;
-    public bool second;
-    public bool third;
-    
-
-
     void Start()
     {
         hand = GameObject.FindGameObjectWithTag("Player");
@@ -29,73 +21,41 @@ public class cup : MonoBehaviour
     }
     private void Update()
     {
-       gameObject.GetComponent<Rigidbody>().useGravity=!canmove;
+        if (hand.GetComponent<mainhand>().playing&&hand.GetComponent<mainhand>().finished==false)
+        {
+        gameObject.GetComponent<Rigidbody>().useGravity=!canmove;
         gameObject.GetComponent<CapsuleCollider>().isTrigger = canmove;
-        if (coffee && milk)
-            {
-                transform.Find("süt").gameObject.SetActive(false);
-                transform.Find("kahve").gameObject.SetActive(false);
-                transform.Find("sütlü_kahve").gameObject.SetActive(true);
-            }
-            else if (milk) {
-                transform.Find("süt").gameObject.SetActive(true);
-                transform.Find("kahve").gameObject.SetActive(false);
-                transform.Find("sütlü_kahve").gameObject.SetActive(false);
-            }
-            else if (coffee)
-            {
-                transform.Find("süt").gameObject.SetActive(false);
-                transform.Find("kahve").gameObject.SetActive(true);
-                transform.Find("sütlü_kahve").gameObject.SetActive(false);
-            }
-            else {transform.Find("süt").gameObject.SetActive(false);
-                transform.Find("kahve").gameObject.SetActive(false);
-                transform.Find("sütlü_kahve").gameObject.SetActive(false); }
 
-        transform.Find("first").gameObject.SetActive(first);
-        transform.Find("second").gameObject.SetActive(second);
-        transform.Find("third").gameObject.SetActive(third);
-        if (first) {
-            
-            
-            transform.Find("first").gameObject.transform.Find("Cup_Sleeve").gameObject.SetActive(sleeve);
-            transform.Find("first").gameObject.transform.Find("Cup_Head").gameObject.SetActive(lid);
-        }
-        if (second)
-        {
-            transform.Find("second").gameObject.transform.Find("Cup_Sleeve").gameObject.SetActive(sleeve);
-            transform.Find("second").gameObject.transform.Find("Cup_Head").gameObject.SetActive(lid);
-        }
-        if (third)
-        {
-            transform.Find("third").gameObject.transform.Find("Cup_Sleeve").gameObject.SetActive(sleeve);
-            transform.Find("third").gameObject.transform.Find("Cup_Head").gameObject.SetActive(lid);
-        }
 
+        }
+       
+        transform.Find("kahve").gameObject.SetActive(coffee);
+        transform.Find("Cup_Head").gameObject.SetActive(lid);
+        transform.Find("Cup_Sleeve").gameObject.SetActive(sleeve);
     }
     private void FixedUpdate()
     {
-        transform.Translate(0, 0, -15*speedz * Time.fixedDeltaTime);
+        transform.Translate(0, 0, -20*speedz * Time.fixedDeltaTime);
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "cup" && canmove == false&&triggertrigger)
+        if ((other.gameObject.tag=="mainhand" || other.gameObject.tag == "cup") && canmove == false && triggertrigger)
         {
             this.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-
             this.gameObject.transform.parent = movingcups.transform;
             canmove = true;
-            
             this.gameObject.transform.position = other.gameObject.transform.position+new Vector3(4,0,0);
-            StartCoroutine(hand.GetComponent<cup_movement>().scalecups());
+            StartCoroutine(hand.GetComponent<mainhand>().scalecups());
         }
         if (other.gameObject.tag == "engel")
         {
             
             cutted = true;
-hand.GetComponent<cup_movement>().cutthecups();
+         hand.GetComponent<mainhand>().cutthecups();
         }
         if (other.gameObject.tag == "destroyer") { gameObject.SetActive(false); }
+        if (other.gameObject.tag == "sleevemachine") { sleeve = true; }
+        if (other.gameObject.tag == "lidmachine") {lid=true; }
     }
     public IEnumerator controltriggertrigger()
     {
