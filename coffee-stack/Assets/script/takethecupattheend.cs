@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class takethecupattheend : MonoBehaviour
@@ -9,7 +11,9 @@ public class takethecupattheend : MonoBehaviour
     int drink;
     public GameObject bilek;
     public GameObject mainhand;
-    
+    public TMP_Text money;
+    public int moneynumber;
+    public int m;
     private void OnTriggerEnter(Collider other)
     {
         other.gameObject.transform.localScale = new Vector3(2, 2, 2);
@@ -20,11 +24,11 @@ public class takethecupattheend : MonoBehaviour
         animator = hand.GetComponent<Animator>();
             drink = Animator.StringToHash("drink");
             animator.SetBool(drink, true);
+            moneynumber = Int32.Parse(money.text) + m;
+            money.text = moneynumber.ToString();
             Debug.Log("collidera çarpan = " + other.gameObject.name);
-            
-            other.gameObject.transform.parent = bilek.gameObject.transform;
+        other.gameObject.transform.parent = bilek.gameObject.transform;
             Destroy(this.gameObject);
-        
     }
 
 }

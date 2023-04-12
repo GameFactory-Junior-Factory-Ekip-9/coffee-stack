@@ -9,6 +9,7 @@ TagManager:
   - destroyer
   - hands
   - mainhand
+  - lidmachine
   layers:
   - Default
   - TransparentFX

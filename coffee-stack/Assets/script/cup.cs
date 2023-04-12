@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using System;
 
 public class cup : MonoBehaviour
 {
@@ -14,48 +16,67 @@ public class cup : MonoBehaviour
     public bool sleeve;
     public bool lid;
     public bool canmove;
+
+    [Header("money")]
+    public TMP_Text money;
+    public int movingcupsnumber;
+    public int moneynumber;
+
     void Start()
     {
         hand = GameObject.FindGameObjectWithTag("Player");
         movingcups = GameObject.Find("movingcups");
+
     }
     private void Update()
     {
-        if (hand.GetComponent<mainhand>().playing&&hand.GetComponent<mainhand>().finished==false)
+        movingcupsnumber = movingcups.gameObject.transform.childCount;
+
+
+        if (hand.GetComponent<mainhand>().playing && hand.GetComponent<mainhand>().finished == false)
         {
-        gameObject.GetComponent<Rigidbody>().useGravity=!canmove;
-        gameObject.GetComponent<CapsuleCollider>().isTrigger = canmove;
+            gameObject.GetComponent<Rigidbody>().useGravity = !canmove;
+            gameObject.GetComponent<CapsuleCollider>().isTrigger = canmove;
 
 
         }
-       
+
         transform.Find("kahve").gameObject.SetActive(coffee);
         transform.Find("Cup_Head").gameObject.SetActive(lid);
         transform.Find("Cup_Sleeve").gameObject.SetActive(sleeve);
+ 
     }
     private void FixedUpdate()
     {
-        transform.Translate(0, 0, -20*speedz * Time.fixedDeltaTime);
+        transform.Translate(0, 0, -20 * speedz * Time.fixedDeltaTime);
     }
     private void OnTriggerEnter(Collider other)
     {
-        if ((other.gameObject.tag=="mainhand" || other.gameObject.tag == "cup") && canmove == false && triggertrigger)
+        if ((other.gameObject.tag == "mainhand" || other.gameObject.tag == "cup") && canmove == false && triggertrigger)
         {
             this.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             this.gameObject.transform.parent = movingcups.transform;
             canmove = true;
-            this.gameObject.transform.position = other.gameObject.transform.position+new Vector3(4,0,0);
+            this.gameObject.transform.position = other.gameObject.transform.position + new Vector3(4, 0, 0);
             StartCoroutine(hand.GetComponent<mainhand>().scalecups());
+
         }
+ 
+
+        moneynumber = movingcupsnumber;
+        money.text = moneynumber.ToString();
+
+
         if (other.gameObject.tag == "engel")
         {
-            
+
             cutted = true;
-         hand.GetComponent<mainhand>().cutthecups();
+            hand.GetComponent<mainhand>().cutthecups();
         }
         if (other.gameObject.tag == "destroyer") { gameObject.SetActive(false); }
         if (other.gameObject.tag == "sleevemachine") { sleeve = true; }
-        if (other.gameObject.tag == "lidmachine") {lid=true; }
+        if (other.gameObject.tag == "lidmachine") {lid = true;}
+  
     }
     public IEnumerator controltriggertrigger()
     {
